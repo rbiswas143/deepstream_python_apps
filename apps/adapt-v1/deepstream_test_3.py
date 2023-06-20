@@ -205,9 +205,8 @@ def create_source_bin(index, uri):
 
 def main(args, requested_pgie=None, config=None, disable_probe=False):
     global perf_data
-    perf_data = PERF_DATA(len(args))
-
-    number_sources = len(args)
+    number_sources = 10  # replicating stream N times
+    perf_data = PERF_DATA(number_sources)
 
     # Standard GStreamer initialization
     Gst.init(None)
@@ -230,7 +229,7 @@ def main(args, requested_pgie=None, config=None, disable_probe=False):
     pipeline.add(streammux)
     for i in range(number_sources):
         print("Creating source_bin ", i, " \n ")
-        uri_name = args[i]
+        uri_name = args[0]
         if uri_name.find("rtsp://") == 0:
             is_live = True
         source_bin = create_source_bin(i, uri_name)
@@ -386,9 +385,9 @@ def main(args, requested_pgie=None, config=None, disable_probe=False):
             GLib.timeout_add(5000, perf_data.perf_print_callback)
 
     # List the sources
-    print("Now playing...")
-    for i, source in enumerate(args):
-        print(i, ": ", source)
+    # print("Now playing...")
+    # for i, source in enumerate(args):
+    #     print(i, ": ", source)
 
     print("Starting pipeline \n")
     # start play back and listed to events
@@ -464,6 +463,7 @@ def parse_args():
     args = parser.parse_args()
 
     stream_paths = args.input
+    assert len(stream_paths) == 1, f"Exactly one stream must be specified, got {len(stream_paths)}"
     pgie = args.pgie
     config = args.configfile
     disable_probe = args.disable_probe
