@@ -205,7 +205,7 @@ def create_source_bin(index, uri):
 
 def main(args, requested_pgie=None, config=None, disable_probe=False):
     global perf_data
-    number_sources = 10  # replicating stream N times
+    number_sources = 100  # replicating stream N times
     perf_data = PERF_DATA(number_sources)
 
     # Standard GStreamer initialization
